@@ -10,9 +10,27 @@
 </head>
 <body>
     
-<h1>Hello from Render</h1>
-{% if name %}
-<h2>and hello to {{name}}</h2>
-{% endif %}
+    <h1>Hello from Render</h1>
+    {% if name %}
+    <h2>and hello to {{name}}</h2>
+    {% endif %}
+    <form action="{{ url_for('submit')}}" method="post">
+        <label for="fname">Name:</label><br>
+        <input type="text" id="fname" name="fname"><br>
+        <label for="message">Message</label><br>
+        <textarea id="message" name="message">
+        </textarea>
+        <input type="submit" value="Submit">
+    </form>
+    <h4>Guest List</h4>
+
+    {% if guests %}
+        {% for guest in guests %}
+            <div class="guest-entry">
+                <p class="guest-name">{{ guest.name }}</p>
+                <p style="white-space-collapse: preserve;">{{ guest.message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
