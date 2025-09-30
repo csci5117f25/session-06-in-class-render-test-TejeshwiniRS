@@ -30,7 +30,12 @@ def showList():
             for row in guests_all:
                 guests.append({'name': row[0], 'message': row[1]})
         conn.close()
-    return render_template('hello.html', guests=guests)
+    name = None
+
+
+@app.route('/display')
+def display():
+    return render_template("display.html")
 
 @app.route('/submit', methods=['POST'])
 def submit():
