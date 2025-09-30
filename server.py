@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import psycopg2
 import os
 
@@ -10,6 +10,9 @@ cursor = conn.cursor()
 
 
 app = Flask(__name__)
+app.secret_key = os.environ.get('FLASK_SECRET')
+
+
 def get_db_connection():
     try:
         conn = psycopg2.connect(DATABASE_URL)
@@ -31,7 +34,9 @@ def showList():
                 guests.append({'name': row[0], 'message': row[1]})
         conn.close()
     name = None
-
+    if "name" in session:
+        name = session["name"]
+    return render_template('hello.html', guests=guests, name=name)
 
 @app.route('/display')
 def display():
@@ -55,4 +60,6 @@ def submit():
 
 @app.route('/<name>')
 def hello(name=None):
+    if name:
+        session["name"] = name
     return render_template('hello.html', name=name)
