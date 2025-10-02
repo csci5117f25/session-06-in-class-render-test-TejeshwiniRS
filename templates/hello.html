@@ -10,6 +10,18 @@
     <title>Hi!</title>
 </head>
 <body>
+    {% if session %}
+        <h1>SESSION EXISTS!</h1>
+        <code>
+            <pre>
+                {{session | tojson}}
+            </pre>
+        </code>
+    {% else %}
+        <h1>No Session</h1>
+    {% endif %}
+
+
     {% if name %}
     <h2>and hello to {{name}}</h2>
     {% endif %}
