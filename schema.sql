@@ -4,3 +4,8 @@ CREATE TABLE session_6 (
     name VARCHAR(255) NOT NULL,
     message VARCHAR(255)
 );
+
+CREATE TABLE session_6_images (
+    id SERIAL PRIMARY KEY,
+    content bytea
+);

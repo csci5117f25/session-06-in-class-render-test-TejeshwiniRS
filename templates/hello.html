@@ -25,12 +25,13 @@
     {% if name %}
     <h2>and hello to {{name}}</h2>
     {% endif %}
-    <form action="{{ url_for('submit')}}" method="post">
+    <form action="{{ url_for('submit')}}" method="post" enctype="multipart/form-data">
         <label for="fname">Name:</label><br>
         <input type="text" id="fname" name="fname"><br>
         <label for="message">Message</label><br>
         <textarea id="message" name="message">
         </textarea>
+        <input type="file" name="image">
         <input type="submit" value="Submit">
     </form>
     <h4>Guest List</h4>

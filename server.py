@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+import io
+from flask import Flask, render_template, request, redirect, url_for, session, send_file
 import psycopg2
+from psycopg2.extras import RealDictCursor
 import os
 # Auth0 imports
 from urllib.parse import quote_plus, urlencode
@@ -93,13 +95,18 @@ def display():
 def submit():
     guest_name = request.form['fname']
     guest_message = request.form['message']
-    
+    file = request.files["image"]
     conn = get_db_connection()
     if conn:
         with conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO session_6 (name, message) VALUES (%s, %s)",
                 (guest_name, guest_message)
+            )
+            conn.commit()
+            cur.execute(
+                "INSERT INTO session_6_images (content) VALUES (%s) returning id;",
+                (file.read(),)
             )
             conn.commit()
         conn.close()
@@ -110,3 +117,12 @@ def hello(name=None):
     if name:
         session["name"] = name
     return render_template('hello.html', name=name)
+
+@app.route('/images/<int:image_id>')
+def get_image(image_id):
+    conn = get_db_connection()
+    with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        cur.execute("SELECT * FROM session_6_images where id=%s", (image_id,))
+        image_row = cur.fetchone() 
+        stream = io.BytesIO(image_row["content"])
+        return send_file(stream, download_name="image")
